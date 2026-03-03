@@ -119,7 +119,7 @@ export default function Home({ navigation }) {
 
           {/* Stats */}
           <View style={[styles.statsRow, { backgroundColor: theme.bgCard, borderColor: theme.border }]}>
-            {[['10M+', 'Users'], ['99%', 'Accuracy'], ['24/7', 'Online']].map(([val, label]) => (
+            {[['1K+', 'Users'], ['99%', 'Accuracy'], ['24/7', 'Online']].map(([val, label]) => (
               <View key={label} style={styles.statItem}>
                 <Text style={[styles.statValue, { color: theme.purpleLight }]}>{val}</Text>
                 <Text style={[styles.statLabel, { color: theme.textMuted }]}>{label}</Text>

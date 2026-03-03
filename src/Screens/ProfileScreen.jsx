@@ -120,13 +120,13 @@ export default function ProfileScreen({ navigation }) {
         </View>
 
         {/* Upgrade Banner */}
-        <TouchableOpacity style={[styles.upgradeBanner, { backgroundColor: theme.bgAccent, borderColor: theme.borderAccent }]} activeOpacity={0.85}>
+        {/* <TouchableOpacity style={[styles.upgradeBanner, { backgroundColor: theme.bgAccent, borderColor: theme.borderAccent }]} activeOpacity={0.85}>
           <View>
             <Text style={[styles.upgradeTitle, { color: theme.textPrimary }]}>✨ Upgrade to Pro</Text>
             <Text style={[styles.upgradeSubtitle, { color: theme.textSecondary }]}>Unlimited chats · Priority AI · No limits</Text>
           </View>
           <Text style={[styles.upgradePrice, { color: theme.purpleLight }]}>$5/mo →</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <Text style={[styles.footer, { color: theme.textDim }]}>Made with ❤️ using React Native & Groq AI</Text>
         <View style={{ height: 40 }} />

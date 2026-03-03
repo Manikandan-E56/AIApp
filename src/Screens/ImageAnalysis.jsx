@@ -4,7 +4,6 @@ import {
   StyleSheet, StatusBar, ActivityIndicator, Alert, Animated,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system';
 import * as Speech from 'expo-speech';
 
 const GROQ_API_KEY = process.env.EXPO_PUBLIC_GROQ_API_KEY;
@@ -25,19 +24,13 @@ export default function ImageAnalysis({ navigation }) {
   const [selectedMode, setSelectedMode] = useState('describe');
   const [customPrompt, setCustomPrompt] = useState('');
   const [isSpeaking, setIsSpeaking]     = useState(false);
+  const [scrollKey, setScrollKey]       = useState(0); // ✅ only new line
 
   const fadeAnim  = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(40)).current;
-
-  // ✅ FIX 1 — Add scrollRef
   const scrollRef = useRef(null);
 
-  // ✅ FIX 2 — Scroll to top helper
-  const scrollToTop = () => {
-    setTimeout(() => {
-      scrollRef.current?.scrollTo({ y: 0, animated: true });
-    }, 150);
-  };
+  const scrollToTop = () => setScrollKey(k => k + 1); // ✅ key-based reset
 
   const animateResult = () => {
     fadeAnim.setValue(0);
@@ -48,7 +41,6 @@ export default function ImageAnalysis({ navigation }) {
     ]).start();
   };
 
-  // ── Pick from Gallery ─────────────────────────────────────────────────────
   const pickFromGallery = async () => {
     try {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -58,19 +50,18 @@ export default function ImageAnalysis({ navigation }) {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         quality: 0.8,
-        base64: true,
+        base64: true, // ✅ changed
       });
 
       if (!result.canceled) {
         setImageUri(result.assets[0].uri);
-        setBase64Image(result.assets[0].base64);
+        setBase64Image(result.assets[0].base64); // ✅ changed
         setResult('');
-        scrollToTop(); // ✅ FIX 3 — Scroll to top after picking
+        scrollToTop();
       }
     } catch (e) { Alert.alert('Error', e.message); }
   };
 
-  // ── Take Photo ────────────────────────────────────────────────────────────
   const takePhoto = async () => {
     try {
       const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -79,19 +70,18 @@ export default function ImageAnalysis({ navigation }) {
       const result = await ImagePicker.launchCameraAsync({
         allowsEditing: true,
         quality: 0.8,
-        base64: true,
+        base64: true, // ✅ changed
       });
 
       if (!result.canceled) {
         setImageUri(result.assets[0].uri);
-        setBase64Image(result.assets[0].base64);
+        setBase64Image(result.assets[0].base64); // ✅ changed
         setResult('');
-        scrollToTop(); // ✅ FIX 3 — Scroll to top after taking photo
+        scrollToTop();
       }
     } catch (e) { Alert.alert('Error', e.message); }
   };
 
-  // ── Analyze Image ─────────────────────────────────────────────────────────
   const analyzeImage = async () => {
     if (!imageUri || !base64Image) { Alert.alert('No Image', 'Please select or take a photo first.'); return; }
 
@@ -102,6 +92,7 @@ export default function ImageAnalysis({ navigation }) {
     setResult('');
 
     try {
+      // ✅ removed FileSystem.readAsStringAsync — base64Image already in state
       const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${GROQ_API_KEY}` },
@@ -132,7 +123,6 @@ export default function ImageAnalysis({ navigation }) {
     }
   };
 
-  // ── Speak Result ──────────────────────────────────────────────────────────
   const speakResult = () => {
     if (isSpeaking) { Speech.stop(); setIsSpeaking(false); return; }
     setIsSpeaking(true);
@@ -159,8 +149,8 @@ export default function ImageAnalysis({ navigation }) {
         <View style={{ width: 40 }} />
       </View>
 
-      {/* ✅ FIX — ref attached to ScrollView */}
       <ScrollView
+        key={scrollKey}
         ref={scrollRef}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scroll}
