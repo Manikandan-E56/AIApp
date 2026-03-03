@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "AI App",
+    "slug": "ai-app",
+    "version": "1.0.0",
+    "web": {
+      "favicon": "./assets/icon.png"
+    },
+    "experiments": {
+      "tsconfigPaths": true
+    },
+    "plugins": [
+      "expo-audio"
+    ],
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.mani8082.aiapp"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c461e502-e46e-4336-8aba-67b577889f8d"
+      }
+    }
+  }
+}
